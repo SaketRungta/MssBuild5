@@ -9,17 +9,21 @@
   <component name="ChangeListManager">
     <list default="true" id="70e591f2-34bd-42b5-9d17-09a3fb839e54" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MssBuild5.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MssBuild5.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_FindMenu_Mss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_FindMenu_Mss.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/ThirdPerson/Maps/Default.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ThirdPerson/Maps/Default.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_Deathmatch_Icon_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_Domination_Icon_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_HostMenuButtonHovered_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_HostMenuMapSelectionButton_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_MultipleOptionSelectionButton_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_ScrollBoxBG_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_SessionDataBG_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_Survival_Icon_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_EnterCodeToJoin_Mss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_EnterCodeToJoin_Mss.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_FindMenu_Mss.uasset" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HUD_Mss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HUD_Mss.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HostMenuMapSelectionButton_Mss.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HostMenu_Mss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HostMenu_Mss.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_MultipleOptionSelectionButton_Mss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_MultipleOptionSelectionButton_Mss.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Subsystem/MssSubsystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Subsystem/MssSubsystem.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Widgets/MssHUD.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Widgets/MssHUD.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Widgets/MssSessionDataWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Widgets/MssSessionDataWidget.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Public/Subsystem/MssSubsystem.h" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Public/Subsystem/MssSubsystem.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Public/Widgets/MssHUD.h" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Public/Widgets/MssHUD.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Public/Widgets/MssSessionDataWidget.h" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Public/Widgets/MssSessionDataWidget.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_SessionData_Mss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_SessionData_Mss.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_SessionResultsWidget_Mss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_SessionResultsWidget_Mss.uasset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -155,7 +159,7 @@
       <updated>1763471781017</updated>
       <workItem from="1763471781713" duration="637000" />
       <workItem from="1763481995359" duration="8976000" />
-      <workItem from="1763495095026" duration="4880000" />
+      <workItem from="1763495095026" duration="7016000" />
     </task>
     <servers />
   </component>
