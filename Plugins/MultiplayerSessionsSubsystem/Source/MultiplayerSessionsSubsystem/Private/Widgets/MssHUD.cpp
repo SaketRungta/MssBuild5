@@ -153,23 +153,16 @@ void UMssHUD::OnSessionStartedCallback(bool bWasSuccessful)
 
 #pragma endregion Multiplayer Sessions Callbacks
 
-void UMssHUD::HostGame(const FText& InMapName, const FText& InGameMode, const FText& InPlayers)
+void UMssHUD::HostGame(const FTempCustomSessionSettings& InSessionSettings)
 {
-	FTempCustomSessionSettings SessionSettings;
-	SessionSettings.MapName = InMapName.ToString();
-	SessionSettings.GameMode = InGameMode.ToString();
-	SessionSettings.Players = InPlayers.ToString();
-
 	ShowMessage(FString("Hosting Game"));
 
-	MssSubsystem->CreateSession(SessionSettings);
+	MssSubsystem->CreateSession(InSessionSettings);
 }
 
-void UMssHUD::FindGame(const FText& InMapName, const FText& InGameMode, const FText& InPlayers)
+void UMssHUD::FindGame(const FTempCustomSessionSettings& InSessionSettings)
 {
-	FilterSessionSettings.MapName = InMapName.ToString();
-	FilterSessionSettings.GameMode = InGameMode.ToString();
-	FilterSessionSettings.Players = InPlayers.ToString();
+	FilterSessionSettings = InSessionSettings;
 
 	ShowMessage(FString("Finding Game"));
 
@@ -237,6 +230,11 @@ void UMssHUD::AddSessionSearchResultsToScrollBox(const TArray<FOnlineSessionSear
 		UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssHUD::AddSessionSearchResultsToScrollBox No filters selected, adding all sessions"));
 		for (const FOnlineSessionSearchResult& CurrentSessionSearchResult : SessionSearchResults)
 		{
+			if (CurrentSessionSearchResult.Session.NumOpenPublicConnections <= 0)
+			{
+				continue;
+			}
+
 			FTempCustomSessionSettings CurrentSessionSettings;
 			CurrentSessionSearchResult.Session.SessionSettings.Get(FName("MapName"), CurrentSessionSettings.MapName);
 			CurrentSessionSearchResult.Session.SessionSettings.Get(FName("GameMode"), CurrentSessionSettings.GameMode);
@@ -251,7 +249,7 @@ void UMssHUD::AddSessionSearchResultsToScrollBox(const TArray<FOnlineSessionSear
 			}
 			
 			const TObjectPtr<UMssSessionDataWidget> CreatedSessionDataWidget = CreateWidget<UMssSessionDataWidget>(GetWorld(), SessionDataWidgetClass);
-			CreatedSessionDataWidget->SetSessionInfo(CurrentSessionSearchResult, CurrentSessionSettings.MapName, CurrentSessionSettings.Players, CurrentSessionSettings.GameMode);
+			CreatedSessionDataWidget->SetSessionInfo(CurrentSessionSearchResult, CurrentSessionSettings);
 			CreatedSessionDataWidget->SetMssHUDRef(this);
 
 			AddSessionDataWidget(CreatedSessionDataWidget);
@@ -291,7 +289,7 @@ void UMssHUD::AddSessionSearchResultsToScrollBox(const TArray<FOnlineSessionSear
 		}
 			
 		const TObjectPtr<UMssSessionDataWidget> CreatedSessionDataWidget = CreateWidget<UMssSessionDataWidget>(GetWorld(), SessionDataWidgetClass);
-		CreatedSessionDataWidget->SetSessionInfo(CurrentSessionSearchResult, CurrentSessionSettings.MapName, CurrentSessionSettings.Players, CurrentSessionSettings.GameMode);
+		CreatedSessionDataWidget->SetSessionInfo(CurrentSessionSearchResult, CurrentSessionSettings);
 		CreatedSessionDataWidget->SetMssHUDRef(this);
 
 		AddSessionDataWidget(CreatedSessionDataWidget);
@@ -325,12 +323,11 @@ void UMssHUD::JoinTheGivenSession(FOnlineSessionSearchResult& InSessionToJoin)
 
 FText UMssHUD::OnEnteredSessionCodeChanged(const FText& InCode)
 {
-	constexpr int32 MaxLength = 7; // Set your maximum length
 	FString EnteredText = InCode.ToString();
 	FString FilteredText;
 
 	// Filter out non-numeric characters
-	for (TCHAR Character : EnteredText)
+	for (const TCHAR Character : EnteredText)
 	{
 		if (FChar::IsDigit(Character)) // Check if the character is a digit
 		{
@@ -339,9 +336,9 @@ FText UMssHUD::OnEnteredSessionCodeChanged(const FText& InCode)
 	}
 
 	// Truncate if the length exceeds the limit
-	if (FilteredText.Len() > MaxLength)
+	if (FilteredText.Len() > 7)
 	{
-		FilteredText = FilteredText.Left(MaxLength);
+		FilteredText = FilteredText.Left(7);
 	}
 
 	// Update the text if it has changed

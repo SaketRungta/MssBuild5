@@ -7,6 +7,7 @@
 #include "OnlineSessionSettings.h"
 #include "MssSessionDataWidget.generated.h"
 
+struct FTempCustomSessionSettings;
 class UTextBlock;
 class UButton;
 class UMssHUD;
@@ -53,7 +54,8 @@ private:
 	
 public:
 	/** Called from UMssHUD::AddSessionSearchResultsToScrollBox upon adding this widget to the scroll box to fill it with necessary information */
-	void SetSessionInfo(const FOnlineSessionSearchResult& InSessionSearchResultRef, const FString& InMapName, const FString& InPlayers, const FString& InGameMode);
+	void SetSessionInfo(const FOnlineSessionSearchResult& InSessionSearchResultRef, 
+		const FTempCustomSessionSettings& SessionSettings);
 
 	/** Called from UMssHUD::AddSessionSearchResultsToScrollBox upon adding this widget to the scroll box to set the ref to main menu widget */
 	void SetMssHUDRef(UMssHUD* InMssHUD);

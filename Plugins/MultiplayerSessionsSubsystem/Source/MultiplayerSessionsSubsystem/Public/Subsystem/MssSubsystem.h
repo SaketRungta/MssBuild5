@@ -28,20 +28,22 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMultiplayerSessionsOnStartSessionCo
 /**
  * Structure to store all the settings to be set while creating a session
  ******************************************************************************************/
-USTRUCT()
+USTRUCT(Blueprintable, BlueprintType)
 struct FTempCustomSessionSettings
 {
 	GENERATED_BODY()
 
 	/** Name of the map that user has selected */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FString MapName = FString("");
 
 	/** Game mode selected by the user */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FString GameMode = FString("");
 
 	/** Numbers of players session will host */
-	FString Players = FString("");
-	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FString Players = FString("");	
 };
 
 /**

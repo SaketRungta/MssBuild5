@@ -75,22 +75,18 @@ private:
 	/**
 	 * Called to request the MssSubsystem to host the game with the given settings
 	 * 
-	 * @param InMapName: Map name of the session to host
-	 * @param InGameMode: Game mode of the session to host
-	 * @param InPlayers: Players this session can host
+	 * @param InSessionSettings settings to host the session with
 	 */
 	UFUNCTION(BlueprintCallable, Category = "MssHUD")
-	void HostGame(const FText& InMapName, const FText& InGameMode, const FText& InPlayers);
+	void HostGame(const FTempCustomSessionSettings& InSessionSettings);
 	
 	/**
 	 * Called to search a session with the given session settings
 	 * 
-	 * @param InMapName: Map name of the session to search if any then do not apply map filter
-	 * @param InGameMode: Game mode of the session to search if any then do not apply game mode filter
-	 * @param InPlayers: Players this session can search if any then do not apply players filter
+	 * @param InSessionSettings settings to find the session with
 	 */
 	UFUNCTION(BlueprintCallable, Category = "MssHUD")
-	void FindGame(const FText& InMapName, const FText& InGameMode, const FText& InPlayers);
+	void FindGame(const FTempCustomSessionSettings& InSessionSettings);
 
 	/**
 	 * Called when user enters any session code he wishes to join

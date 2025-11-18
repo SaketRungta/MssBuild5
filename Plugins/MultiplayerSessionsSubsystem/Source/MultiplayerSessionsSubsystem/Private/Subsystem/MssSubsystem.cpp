@@ -79,7 +79,7 @@ void UMssSubsystem::CreateSession(const FTempCustomSessionSettings& InCustomSess
 	OnlineSessionSettings->bIsLANMatch = false;
 	OnlineSessionSettings->bIsDedicated = false;
 	OnlineSessionSettings->bUsesPresence = true;
-	OnlineSessionSettings->bAllowJoinInProgress = true;
+	OnlineSessionSettings->bAllowJoinInProgress = false;
 	OnlineSessionSettings->NumPublicConnections = NumPublicConnections;
 	OnlineSessionSettings->bAllowJoinViaPresence = true;
 	OnlineSessionSettings->bShouldAdvertise = true;

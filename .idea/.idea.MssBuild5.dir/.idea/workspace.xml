@@ -9,16 +9,17 @@
   <component name="ChangeListManager">
     <list default="true" id="70e591f2-34bd-42b5-9d17-09a3fb839e54" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MssBuild5.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MssBuild5.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MssBuild5/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MssBuild5/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MssBuild5/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_FindMenu_Mss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_FindMenu_Mss.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HUD_Mss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HUD_Mss.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/MultiplayerSessionsSubsystem.uplugin" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/MultiplayerSessionsSubsystem.uplugin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HostMenuMapSelectionButton_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HostMenu_Mss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HostMenu_Mss.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_MultipleOptionSelectionButton_Mss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_MultipleOptionSelectionButton_Mss.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Subsystem/MssSubsystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Subsystem/MssSubsystem.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Widgets/MssHUD.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Widgets/MssHUD.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Widgets/MssSessionDataWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Widgets/MssSessionDataWidget.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Public/Subsystem/MssSubsystem.h" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Public/Subsystem/MssSubsystem.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/MssBuild5/MssBuild5.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Source/MssBuild5/MssBuild5.Build.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Public/Widgets/MssHUD.h" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Public/Widgets/MssHUD.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Public/Widgets/MssSessionDataWidget.h" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Public/Widgets/MssSessionDataWidget.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -154,7 +155,7 @@
       <updated>1763471781017</updated>
       <workItem from="1763471781713" duration="637000" />
       <workItem from="1763481995359" duration="8976000" />
-      <workItem from="1763495095026" duration="1739000" />
+      <workItem from="1763495095026" duration="4880000" />
     </task>
     <servers />
   </component>

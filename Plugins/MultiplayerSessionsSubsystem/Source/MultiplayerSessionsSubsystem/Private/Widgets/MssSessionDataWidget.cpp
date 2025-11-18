@@ -25,13 +25,14 @@ void UMssSessionDataWidget::OnJoinSessionButtonClicked()
 		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("UMssSessionDataWidget::OnJoinSessionButtonClicked MssHUDRef is null"));
 }
 
-void UMssSessionDataWidget::SetSessionInfo(const FOnlineSessionSearchResult& InSessionSearchResultRef, const FString& InMapName, const FString& InPlayers, const FString& InGameMode)
+void UMssSessionDataWidget::SetSessionInfo(const FOnlineSessionSearchResult& InSessionSearchResultRef, 
+	const FTempCustomSessionSettings& SessionSettings)
 {
 	SessionSearchResultRef = InSessionSearchResultRef;
 	
-	MapName->SetText(FText::FromString(InMapName));
-	Players->SetText(FText::FromString(InPlayers));
-	GameMode->SetText(FText::FromString(InGameMode));
+	MapName->SetText(FText::FromString(SessionSettings.MapName));
+	Players->SetText(FText::FromString(SessionSettings.Players));
+	GameMode->SetText(FText::FromString(SessionSettings.GameMode));
 }
 
 void UMssSessionDataWidget::SetMssHUDRef(UMssHUD* InMssHUD)
