@@ -65,7 +65,7 @@ void UMssHUD::OnSessionCreatedCallback(bool bWasSuccessful)
 		return;
 	}
 
-	UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("UMssHUD::OnSessionCreatedCallback server travel to path: %s"), *(LobbyMapPath + FString("?listen")));
+	UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssHUD::OnSessionCreatedCallback server travel to path: %s"), *(LobbyMapPath + FString("?listen")));
 		
 	if (UWorld* World = GetWorld())
 		World->ServerTravel(LobbyMapPath + FString("?listen"));

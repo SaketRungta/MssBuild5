@@ -163,6 +163,38 @@ private:
 	
 #pragma endregion Session Operations On Completion Delegates Callbacks
 
+#pragma region Timeout Handling
+	
+	// ===== Timeout handlers =====
+	void HandleCreateSessionTimeout();
+	void HandleFindSessionsTimeout();
+	void HandleJoinSessionTimeout();
+	void HandleDestroySessionTimeout();
+	void HandleStartSessionTimeout();
+	
+	// ===== Timeout durations (seconds) =====
+	static constexpr float CreateSessionTimeoutSeconds  = 15.f;
+	static constexpr float FindSessionsTimeoutSeconds   = 15.f;
+	static constexpr float JoinSessionTimeoutSeconds    = 15.f;
+	static constexpr float DestroySessionTimeoutSeconds = 10.f;
+	static constexpr float StartSessionTimeoutSeconds   = 10.f;
+
+	// ===== Timers for each async op =====
+	FTimerHandle CreateSessionTimeoutHandle;
+	FTimerHandle FindSessionsTimeoutHandle;
+	FTimerHandle JoinSessionTimeoutHandle;
+	FTimerHandle DestroySessionTimeoutHandle;
+	FTimerHandle StartSessionTimeoutHandle;
+
+	// ===== State flags so we can ignore late callbacks =====
+	bool bCreateSessionInProgress   = false;
+	bool bFindSessionsInProgress    = false;
+	bool bJoinSessionInProgress     = false;
+	bool bDestroySessionInProgress  = false;
+	bool bStartSessionInProgress    = false;
+	
+#pragma endregion Timeout Handling
+	
 	/** True when user requests to create a new session but the last created session is already active */
 	bool bCreateSessionOnDestroy = false;
 
@@ -172,4 +204,9 @@ private:
 	 */
 	FTempCustomSessionSettings SessionSettingsForTheSessionToCreateAfterDestruction;
 	
+	int32 JoinRetryCounter = 0;
+	
+	int32 MaxJoinRetries = 1;
+	
+	bool IsSessionInState(EOnlineSessionState::Type State) const;
 };
