@@ -9,21 +9,60 @@
   <component name="ChangeListManager">
     <list default="true" id="70e591f2-34bd-42b5-9d17-09a3fb839e54" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MssBuild5.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MssBuild5.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/ThirdPerson/Maps/Default.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ThirdPerson/Maps/Default.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_Deathmatch_Icon_Mss.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_Domination_Icon_Mss.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_HostMenuButtonHovered_Mss.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_HostMenuMapSelectionButton_Mss.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_MultipleOptionSelectionButton_Mss.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_ScrollBoxBG_Mss.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_SessionDataBG_Mss.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_Survival_Icon_Mss.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_EnterCodeToJoin_Mss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_EnterCodeToJoin_Mss.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_FindMenu_Mss.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HUD_Mss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HUD_Mss.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_MultipleOptionSelectionButton_Mss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_MultipleOptionSelectionButton_Mss.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_SessionData_Mss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_SessionData_Mss.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_SessionResultsWidget_Mss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_SessionResultsWidget_Mss.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultGame.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultGame.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MssBuild5.uproject" beforeDir="false" afterPath="$PROJECT_DIR$/MssBuild5.uproject" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/Fonts/Orbitron.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/Fonts/Orbitron/Orbitron-Black.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/Fonts/Orbitron/Orbitron-Bold.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/Fonts/Orbitron/Orbitron-Medium.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_BUttonBordersHovered_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_Browse_Icon_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_Button01BordersHovered_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_Button01Borders_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_Button01MidHovered_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_Button01Mid_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_ButtonBorders_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_ButtonMidHovered_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_ButtonMid_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_Enter_Icon_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_Host_Icon_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_MainMenuBG_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_MainMenuBackDrop_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_MainMenuButtonHovered_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_MainMenuButton_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Assets/UI/T_UI_OtherMenuBG_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_ButtonBlue_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_ButtonPink_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_EnterCodeToJoin_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HUD.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HUD_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HostMenu_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_MainMenuButton_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_MainMenu_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_MultipleOptionSelectionButton_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_SessionData_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_SessionResultsWidget_Mss.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/MultiplayerSessionsSubsystem.uplugin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Resources/Icon128.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/MultiplayerSessionsSubsystem.Build.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/MultiplayerSessionsSubsystem.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Subsystem/MssSubsystem.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Widgets/MssHUD.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Widgets/MssSessionDataWidget.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Public/MultiplayerSessionsSubsystem.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Public/Subsystem/MssSubsystem.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Public/Widgets/MssHUD.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Public/Widgets/MssSessionDataWidget.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/SteamIntegrationKit/Resources/Icon128.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/SteamIntegrationKit/Source/SteamIntegrationKit/Private/MyClass.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/SteamIntegrationKit/Source/SteamIntegrationKit/Private/SitSubsystem.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/SteamIntegrationKit/Source/SteamIntegrationKit/Private/SteamIntegrationKit.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/SteamIntegrationKit/Source/SteamIntegrationKit/Public/MyClass.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/SteamIntegrationKit/Source/SteamIntegrationKit/Public/SitSubsystem.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/SteamIntegrationKit/Source/SteamIntegrationKit/Public/SteamIntegrationKit.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/SteamIntegrationKit/Source/SteamIntegrationKit/SteamIntegrationKit.Build.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/SteamIntegrationKit/SteamIntegrationKit.uplugin" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,22 +98,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "Uproject.MssBuild5.executor": "Run",
-    "git-widget-placeholder": "main",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;Uproject.MssBuild5.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="MssBuild5" type="Uproject" factoryName="rider.uproject">
       <configuration_1 setup="1">
@@ -160,6 +199,12 @@
       <workItem from="1763471781713" duration="637000" />
       <workItem from="1763481995359" duration="8976000" />
       <workItem from="1763495095026" duration="7016000" />
+      <workItem from="1763544635159" duration="3293000" />
+      <workItem from="1763551188472" duration="13000" />
+      <workItem from="1763551253607" duration="695000" />
+      <workItem from="1763580188034" duration="4908000" />
+      <workItem from="1763585514052" duration="116000" />
+      <workItem from="1763585724283" duration="120000" />
     </task>
     <servers />
   </component>

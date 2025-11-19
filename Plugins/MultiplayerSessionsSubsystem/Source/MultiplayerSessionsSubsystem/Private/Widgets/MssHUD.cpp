@@ -7,6 +7,7 @@
 #include "Engine/GameInstance.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
+#include "Online/OnlineSessionNames.h"
 #include "UObject/ConstructorHelpers.h"
 
 UMssHUD::UMssHUD(const FObjectInitializer& ObjectInitializer)
@@ -81,6 +82,8 @@ void UMssHUD::OnSessionsFoundCallback(const TArray<FOnlineSessionSearchResult>& 
 		
 		bJoinSessionViaCode = false;
 		ShowMessage(FString("Unknown Error"), true);
+		SetFindSessionsThrobberVisibility(ESlateVisibility::Visible);
+		// Continue displaying the throbber
 		return;
 	}
 	
@@ -89,8 +92,8 @@ void UMssHUD::OnSessionsFoundCallback(const TArray<FOnlineSessionSearchResult>& 
 		UE_LOG(MultiplayerSessionSubsystemLog, Warning, TEXT("UMssHUD::OnSessionsFoundCallback no active sessions found"));
 
 		bJoinSessionViaCode = false;
-		ShowMessage(FString("No Active Sessions Found"), true);
-		
+		// ShowMessage(FString("No Active Sessions Found"), true);
+		SetFindSessionsThrobberVisibility(ESlateVisibility::Visible);
 		return;
 	}
 
@@ -99,15 +102,19 @@ void UMssHUD::OnSessionsFoundCallback(const TArray<FOnlineSessionSearchResult>& 
 		UE_LOG(MultiplayerSessionSubsystemLog, Warning, TEXT("UMssHUD::OnSessionsFoundCallback is not successful"));
 
 		bJoinSessionViaCode = false;
-		ShowMessage(FString("Failed to Find Session"), true);
-
+		// ShowMessage(FString("Failed to Find Session"), true);
+		SetFindSessionsThrobberVisibility(ESlateVisibility::Visible);
 		return;
 	}
 
 	if (bJoinSessionViaCode)
+	{
 		JoinSessionViaSessionCode(SessionResults);
+	}
 	else
+	{
 		AddSessionSearchResultsToScrollBox(SessionResults);
+	}
 }
 
 void UMssHUD::OnSessionJoinedCallback(EOnJoinSessionCompleteResult::Type Result)
@@ -164,7 +171,7 @@ void UMssHUD::FindGame(const FTempCustomSessionSettings& InSessionSettings)
 {
 	FilterSessionSettings = InSessionSettings;
 
-	ShowMessage(FString("Finding Game"));
+	// ShowMessage(FString("Finding Game"));
 
 	MssSubsystem->FindSessions();
 }
@@ -214,6 +221,8 @@ void UMssHUD::AddSessionSearchResultsToScrollBox(const TArray<FOnlineSessionSear
 {
 	UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssHUD::AddSessionSearchResultsToScrollBox Called"));
 
+	// TODO: Clear all previous sessions
+	
 	FTempCustomSessionSettings SessionSettingsToLookFor;
 	SessionSettingsToLookFor.MapName = FilterSessionSettings.MapName;
 	SessionSettingsToLookFor.GameMode = FilterSessionSettings.GameMode;
@@ -261,6 +270,11 @@ void UMssHUD::AddSessionSearchResultsToScrollBox(const TArray<FOnlineSessionSear
 	
 	for (const FOnlineSessionSearchResult& CurrentSessionSearchResult : SessionSearchResults)
 	{
+		if (CurrentSessionSearchResult.Session.NumOpenPublicConnections <= 0)
+		{
+			continue;
+		}
+		
 		FTempCustomSessionSettings CurrentSessionSettings;
 		CurrentSessionSearchResult.Session.SessionSettings.Get(FName("MapName"), CurrentSessionSettings.MapName);
 		CurrentSessionSearchResult.Session.SessionSettings.Get(FName("GameMode"), CurrentSessionSettings.GameMode);

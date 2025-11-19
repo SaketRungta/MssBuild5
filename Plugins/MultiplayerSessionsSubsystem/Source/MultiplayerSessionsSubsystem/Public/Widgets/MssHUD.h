@@ -125,6 +125,7 @@ private:
 	FText OnEnteredSessionCodeChanged(const FText& InCode);
 	
 	/** Subsystem that handles all the multiplayer functionality */
+	UPROPERTY()
 	TObjectPtr<UMssSubsystem> MssSubsystem;
 
 	/** Path to the lobby map, we will travel to this map after creating a session successfully */
@@ -173,4 +174,6 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void ClearSessionDataScrollBox();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetFindSessionsThrobberVisibility(ESlateVisibility InSlateVisibility);
 };

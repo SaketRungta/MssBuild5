@@ -76,19 +76,19 @@ void UMssSubsystem::CreateSession(const FTempCustomSessionSettings& InCustomSess
 		NumPublicConnections = 8;
 	
 	const TSharedPtr<FOnlineSessionSettings> OnlineSessionSettings = MakeShareable(new FOnlineSessionSettings());
-	OnlineSessionSettings->bIsLANMatch = false;
-	OnlineSessionSettings->bIsDedicated = false;
-	OnlineSessionSettings->bUsesPresence = true;
-	OnlineSessionSettings->bAllowJoinInProgress = false;
+	OnlineSessionSettings->bIsLANMatch = IOnlineSubsystem::Get()->GetSubsystemName() == "NULL" ? true : false;
 	OnlineSessionSettings->NumPublicConnections = NumPublicConnections;
+	OnlineSessionSettings->bAllowJoinInProgress = true;
 	OnlineSessionSettings->bAllowJoinViaPresence = true;
 	OnlineSessionSettings->bShouldAdvertise = true;
+	OnlineSessionSettings->bUsesPresence = true;
 	OnlineSessionSettings->bUseLobbiesIfAvailable = true;
-	OnlineSessionSettings->Set(FName("MapName"), InCustomSessionSettings.MapName, EOnlineDataAdvertisementType::ViaOnlineService);
-	OnlineSessionSettings->Set(FName("GameMode"), InCustomSessionSettings.GameMode, EOnlineDataAdvertisementType::ViaOnlineService);
-	OnlineSessionSettings->Set(FName("Players"), InCustomSessionSettings.Players, EOnlineDataAdvertisementType::ViaOnlineService);
-	OnlineSessionSettings->Set(FName("SessionCode"), GenerateSessionUniqueCode(), EOnlineDataAdvertisementType::ViaOnlineService);
-
+	OnlineSessionSettings->BuildUniqueId = 1;
+	OnlineSessionSettings->Set(FName("MapName"), InCustomSessionSettings.MapName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+	OnlineSessionSettings->Set(FName("GameMode"), InCustomSessionSettings.GameMode, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+	OnlineSessionSettings->Set(FName("Players"), InCustomSessionSettings.Players, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+	OnlineSessionSettings->Set(FName("SessionCode"), GenerateSessionUniqueCode(), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+	
 #pragma endregion Session Settings
 	
 	if (!SessionInterface->CreateSession(*GetWorld()->GetFirstLocalPlayerFromController()->GetPreferredUniqueNetId(), NAME_GameSession, *OnlineSessionSettings))
@@ -129,12 +129,12 @@ void UMssSubsystem::FindSessions()
 	bFindSessionsInProgress = true;
 	
 	FindSessionsCompleteDelegateHandle = SessionInterface->AddOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegate);
-
-	LastCreatedSessionSearch = MakeShareable(new FOnlineSessionSearch());
-	LastCreatedSessionSearch->MaxSearchResults = 10'000;
-	LastCreatedSessionSearch->bIsLanQuery = false;
-	LastCreatedSessionSearch->QuerySettings.Set(SEARCH_LOBBIES, true, EOnlineComparisonOp::Equals);
 	
+	LastCreatedSessionSearch = MakeShareable(new FOnlineSessionSearch());
+	LastCreatedSessionSearch->MaxSearchResults = 10000;
+	LastCreatedSessionSearch->bIsLanQuery = IOnlineSubsystem::Get()->GetSubsystemName() == "NULL" ? true : false;;
+	LastCreatedSessionSearch->QuerySettings.Set(SEARCH_LOBBIES, true, EOnlineComparisonOp::Equals);
+
 	if (!SessionInterface->FindSessions(*GetWorld()->GetFirstLocalPlayerFromController()->GetPreferredUniqueNetId(), LastCreatedSessionSearch.ToSharedRef()))
 	{
 		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("UMssSubsystem::FindSessions failed to execute find sessions"));
