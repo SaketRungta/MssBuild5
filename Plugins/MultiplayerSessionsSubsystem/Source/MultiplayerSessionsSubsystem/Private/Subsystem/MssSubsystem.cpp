@@ -76,14 +76,14 @@ void UMssSubsystem::CreateSession(const FTempCustomSessionSettings& InCustomSess
 		NumPublicConnections = 8;
 	
 	const TSharedPtr<FOnlineSessionSettings> OnlineSessionSettings = MakeShareable(new FOnlineSessionSettings());
-	OnlineSessionSettings->bIsLANMatch = IOnlineSubsystem::Get()->GetSubsystemName() == "NULL" ? true : false;
+	OnlineSessionSettings->bIsLANMatch = false;
 	OnlineSessionSettings->NumPublicConnections = NumPublicConnections;
 	OnlineSessionSettings->bAllowJoinInProgress = true;
 	OnlineSessionSettings->bAllowJoinViaPresence = true;
 	OnlineSessionSettings->bShouldAdvertise = true;
 	OnlineSessionSettings->bUsesPresence = true;
 	OnlineSessionSettings->bUseLobbiesIfAvailable = true;
-	OnlineSessionSettings->BuildUniqueId = 1;
+	OnlineSessionSettings->Set(FName("RANDOMSEED"), FString("afs65d4"), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	OnlineSessionSettings->Set(FName("MapName"), InCustomSessionSettings.MapName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	OnlineSessionSettings->Set(FName("GameMode"), InCustomSessionSettings.GameMode, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	OnlineSessionSettings->Set(FName("Players"), InCustomSessionSettings.Players, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
@@ -132,7 +132,8 @@ void UMssSubsystem::FindSessions()
 	
 	LastCreatedSessionSearch = MakeShareable(new FOnlineSessionSearch());
 	LastCreatedSessionSearch->MaxSearchResults = 10000;
-	LastCreatedSessionSearch->bIsLanQuery = IOnlineSubsystem::Get()->GetSubsystemName() == "NULL" ? true : false;;
+	LastCreatedSessionSearch->bIsLanQuery = false;;
+	// LastCreatedSessionSearch->QuerySettings.Set(FName("RANDOMSEED"), FString("afs65d4"), EOnlineComparisonOp::Equals);
 	LastCreatedSessionSearch->QuerySettings.Set(SEARCH_LOBBIES, true, EOnlineComparisonOp::Equals);
 
 	if (!SessionInterface->FindSessions(*GetWorld()->GetFirstLocalPlayerFromController()->GetPreferredUniqueNetId(), LastCreatedSessionSearch.ToSharedRef()))

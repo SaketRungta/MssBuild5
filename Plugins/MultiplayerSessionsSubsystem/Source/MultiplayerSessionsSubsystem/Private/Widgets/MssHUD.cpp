@@ -7,7 +7,6 @@
 #include "Engine/GameInstance.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
-#include "Online/OnlineSessionNames.h"
 #include "UObject/ConstructorHelpers.h"
 
 UMssHUD::UMssHUD(const FObjectInitializer& ObjectInitializer)
@@ -171,8 +170,10 @@ void UMssHUD::FindGame(const FTempCustomSessionSettings& InSessionSettings)
 {
 	FilterSessionSettings = InSessionSettings;
 
-	// ShowMessage(FString("Finding Game"));
+	ClearSessionsScrollBox();
 
+	SetFindSessionsThrobberVisibility(ESlateVisibility::Visible);
+	
 	MssSubsystem->FindSessions();
 }
 
@@ -221,7 +222,7 @@ void UMssHUD::AddSessionSearchResultsToScrollBox(const TArray<FOnlineSessionSear
 {
 	UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssHUD::AddSessionSearchResultsToScrollBox Called"));
 
-	// TODO: Clear all previous sessions
+	GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Red, FString::Printf(TEXT("Adding Session Search Results %d"), SessionSearchResults.Num()));
 	
 	FTempCustomSessionSettings SessionSettingsToLookFor;
 	SessionSettingsToLookFor.MapName = FilterSessionSettings.MapName;
@@ -316,7 +317,7 @@ void UMssHUD::AddSessionSearchResultsToScrollBox(const TArray<FOnlineSessionSear
 	{
 		UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssHUD::AddSessionSearchResultsToScrollBox FoundSessionScrollBox->GetChildrenCount() == 0"));
 
-		ShowMessage(FString("No active sessions found."), true);
+		SetFindSessionsThrobberVisibility(ESlateVisibility::Visible);
 	}
 }
 

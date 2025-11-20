@@ -176,4 +176,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void SetFindSessionsThrobberVisibility(ESlateVisibility InSlateVisibility);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ClearSessionsScrollBox();
 };
