@@ -4,6 +4,7 @@
 
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
+#include "System/MssLogger.h"
 #include "Widgets/MssHUD.h"
 
 bool UMssSessionDataWidget::Initialize()
@@ -19,10 +20,13 @@ bool UMssSessionDataWidget::Initialize()
 
 void UMssSessionDataWidget::OnJoinSessionButtonClicked()
 {
-	if (MssHUDRef.IsValid())
-		MssHUDRef->JoinTheGivenSession(SessionSearchResultRef);
-	else
-		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("UMssSessionDataWidget::OnJoinSessionButtonClicked MssHUDRef is null"));
+	if (!MssHUDRef.IsValid())
+	{
+		LOG_ERROR(TEXT("MssHUDRef is INVALID"));
+		return;
+	}
+	
+	MssHUDRef->JoinTheGivenSession(SessionSearchResultRef);
 }
 
 void UMssSessionDataWidget::SetSessionInfo(const FOnlineSessionSearchResult& InSessionSearchResultRef, 

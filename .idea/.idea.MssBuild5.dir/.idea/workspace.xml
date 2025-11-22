@@ -9,11 +9,9 @@
   <component name="ChangeListManager">
     <list default="true" id="70e591f2-34bd-42b5-9d17-09a3fb839e54" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MssBuild5.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MssBuild5.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HUD_Mss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HUD_Mss.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HostMenu_Mss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HostMenu_Mss.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_SessionResultsWidget_Mss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_SessionResultsWidget_Mss.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Subsystem/MssSubsystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Subsystem/MssSubsystem.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Widgets/MssHUD.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Widgets/MssHUD.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Widgets/MssSessionDataWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Widgets/MssSessionDataWidget.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Public/Subsystem/MssSubsystem.h" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Public/Subsystem/MssSubsystem.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Public/Widgets/MssHUD.h" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Public/Widgets/MssHUD.h" afterDir="false" />
     </list>
@@ -53,22 +51,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;Uproject.MssBuild5.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "Uproject.MssBuild5.executor": "Run",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "TEXT"
+    ]
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="MssBuild5" type="Uproject" factoryName="rider.uproject">
       <configuration_1 setup="1">
@@ -164,7 +167,9 @@
       <workItem from="1763811684557" duration="7503000" />
       <workItem from="1763819356713" duration="3767000" />
       <workItem from="1763823189918" duration="2998000" />
-      <workItem from="1763839812155" duration="5646000" />
+      <workItem from="1763839812155" duration="5742000" />
+      <workItem from="1763845636211" duration="47000" />
+      <workItem from="1763845719945" duration="4371000" />
     </task>
     <servers />
   </component>

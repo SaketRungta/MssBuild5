@@ -81,7 +81,7 @@ private:
 	void HostGame(const FTempCustomSessionSettings& InSessionSettings);
 	
 	/** Called to search a session with the given session settings */
-	void FindGame() const;
+	void FindGame();
 
 	/**
 	 * Called when user enters any session code he wishes to join
@@ -111,7 +111,7 @@ private:
 	 * @return FText: The filtered out code that has to be displayed on the text box
 	 */
 	UFUNCTION(BlueprintCallable, Category = "MssHUD")
-	FText OnEnteredSessionCodeChanged(const FText& InCode);
+	static FText OnEnteredSessionCodeChanged(const FText& InCode);
 	
 	/** Subsystem that handles all the multiplayer functionality */
 	UPROPERTY()
@@ -144,6 +144,8 @@ private:
 
 	// Cache last known list so we can diff quickly
 	TSet<FString> LastSessionKeys;
+	
+	TObjectPtr<UMssSubsystem> GetMssSubsystem();
 	
 public:
 	/**

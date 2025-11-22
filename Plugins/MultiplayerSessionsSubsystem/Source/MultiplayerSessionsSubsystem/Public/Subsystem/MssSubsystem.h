@@ -7,8 +7,6 @@
 #include "Interfaces/OnlineSessionInterface.h"
 #include "MssSubsystem.generated.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(MultiplayerSessionSubsystemLog, Log, All);
-
 #define SETTING_NUMPLAYERSREQUIRED FName("NumPlayers") 
 #define SETTING_FILTERSEED FName("FilterSeed")
 #define SETTING_FILTERSEED_VALUE 94311 
