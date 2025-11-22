@@ -7,6 +7,7 @@
 #include "Engine/GameInstance.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
+#include "Online/OnlineSessionNames.h"
 #include "UObject/ConstructorHelpers.h"
 
 UMssHUD::UMssHUD(const FObjectInitializer& ObjectInitializer)
@@ -82,10 +83,20 @@ void UMssHUD::OnSessionsFoundCallback(const TArray<FOnlineSessionSearchResult>& 
 		bJoinSessionViaCode = false;
 		ShowMessage(FString("Unknown Error"), true);
 		SetFindSessionsThrobberVisibility(ESlateVisibility::Visible);
-		// Continue displaying the throbber
 		return;
 	}
 	
+	if (!bWasSuccessful)
+	{
+		UE_LOG(MultiplayerSessionSubsystemLog, Warning, TEXT("UMssHUD::OnSessionsFoundCallback is not successful"));
+
+		bJoinSessionViaCode = false;
+		ShowMessage(FString("Failed to Find Session"), true);
+		SetFindSessionsThrobberVisibility(ESlateVisibility::Visible);
+		return;
+	}
+
+	/*
 	if (SessionResults.IsEmpty())
 	{
 		UE_LOG(MultiplayerSessionSubsystemLog, Warning, TEXT("UMssHUD::OnSessionsFoundCallback no active sessions found"));
@@ -95,24 +106,15 @@ void UMssHUD::OnSessionsFoundCallback(const TArray<FOnlineSessionSearchResult>& 
 		SetFindSessionsThrobberVisibility(ESlateVisibility::Visible);
 		return;
 	}
-
-	if (!bWasSuccessful)
-	{
-		UE_LOG(MultiplayerSessionSubsystemLog, Warning, TEXT("UMssHUD::OnSessionsFoundCallback is not successful"));
-
-		bJoinSessionViaCode = false;
-		// ShowMessage(FString("Failed to Find Session"), true);
-		SetFindSessionsThrobberVisibility(ESlateVisibility::Visible);
-		return;
-	}
-
+*/
+	
 	if (bJoinSessionViaCode)
 	{
 		JoinSessionViaSessionCode(SessionResults);
 	}
 	else
 	{
-		AddSessionSearchResultsToScrollBox(SessionResults);
+		UpdateSessionsList(SessionResults);
 	}
 }
 
@@ -129,11 +131,11 @@ void UMssHUD::OnSessionJoinedCallback(EOnJoinSessionCompleteResult::Type Result)
 	
 	if (const IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get())
 	{
-		IOnlineSessionPtr SessionInterface = OnlineSubsystem->GetSessionInterface();
-		if (SessionInterface.IsValid())
+		if (const IOnlineSessionPtr SessionInterface = OnlineSubsystem->GetSessionInterface(); 
+			SessionInterface.IsValid())
 		{
-			FString AddressOfSessionToJoin;
-			if (SessionInterface->GetResolvedConnectString(NAME_GameSession, AddressOfSessionToJoin))
+			if (FString AddressOfSessionToJoin; 
+				SessionInterface->GetResolvedConnectString(NAME_GameSession, AddressOfSessionToJoin))
 			{
 				if (APlayerController* PlayerController = GetGameInstance()->GetFirstLocalPlayerController())
 				{
@@ -170,10 +172,6 @@ void UMssHUD::FindGame(const FTempCustomSessionSettings& InSessionSettings)
 {
 	FilterSessionSettings = InSessionSettings;
 
-	ClearSessionsScrollBox();
-
-	SetFindSessionsThrobberVisibility(ESlateVisibility::Visible);
-	
 	MssSubsystem->FindSessions();
 }
 
@@ -190,8 +188,6 @@ void UMssHUD::EnterCode(const FText& InSessionCode)
 	
 	ShowMessage(FString("Joining Game"));
 	
-	ClearSessionDataScrollBox();
-	
 	MssSubsystem->FindSessions();
 }
 
@@ -204,7 +200,7 @@ void UMssHUD::JoinSessionViaSessionCode(const TArray<FOnlineSessionSearchResult>
 	for (FOnlineSessionSearchResult CurrentSessionSearchResult : SessionSearchResults)
 	{
 		FString CurrentSessionResultSessionCode = FString(""); 
-		CurrentSessionSearchResult.Session.SessionSettings.Get(FName("SessionCode"), CurrentSessionResultSessionCode);
+		CurrentSessionSearchResult.Session.SessionSettings.Get(SETTING_SESSIONKEY, CurrentSessionResultSessionCode);
 		if (CurrentSessionResultSessionCode == SessionCodeToJoin)
 		{
 			UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssHUD::JoinSessionViaSessionCode Found session with code %s joining it"), *SessionCodeToJoin);
@@ -218,106 +214,92 @@ void UMssHUD::JoinSessionViaSessionCode(const TArray<FOnlineSessionSearchResult>
 	bJoinSessionViaCode = false;
 }
 
-void UMssHUD::AddSessionSearchResultsToScrollBox(const TArray<FOnlineSessionSearchResult>& SessionSearchResults)
+void UMssHUD::UpdateSessionsList(const TArray<FOnlineSessionSearchResult>& Results)
 {
-	UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssHUD::AddSessionSearchResultsToScrollBox Called"));
+	UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssHUD::UpdateSessionsList called"));
 
-	GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Red, FString::Printf(TEXT("Adding Session Search Results %d"), SessionSearchResults.Num()));
-	
-	FTempCustomSessionSettings SessionSettingsToLookFor;
-	SessionSettingsToLookFor.MapName = FilterSessionSettings.MapName;
-	SessionSettingsToLookFor.GameMode = FilterSessionSettings.GameMode;
-	SessionSettingsToLookFor.Players = FilterSessionSettings.Players;
+	const bool bShowAllMapName  = (FilterSessionSettings.MapName  == "Any");
+	const bool bShowAllGameMode = (FilterSessionSettings.GameMode == "Any");
+	const bool bShowAllPlayers  = (FilterSessionSettings.Players  == "Any");
 
-	// True if the user has selected the option as any 
-	const bool bShowAllMapName = SessionSettingsToLookFor.MapName == "Any";
-	const bool bShowAllGameMode = SessionSettingsToLookFor.GameMode == "Any";
-	const bool bShowAllPlayers = SessionSettingsToLookFor.Players == "Any";
-
-	// If all three options are selected as any then show all the search results
-	if (bShowAllMapName && bShowAllGameMode && bShowAllPlayers)
-	{
-		UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssHUD::AddSessionSearchResultsToScrollBox No filters selected, adding all sessions"));
-		for (const FOnlineSessionSearchResult& CurrentSessionSearchResult : SessionSearchResults)
-		{
-			if (CurrentSessionSearchResult.Session.NumOpenPublicConnections <= 0)
-			{
-				continue;
-			}
-
-			FTempCustomSessionSettings CurrentSessionSettings;
-			CurrentSessionSearchResult.Session.SessionSettings.Get(FName("MapName"), CurrentSessionSettings.MapName);
-			CurrentSessionSearchResult.Session.SessionSettings.Get(FName("GameMode"), CurrentSessionSettings.GameMode);
-			CurrentSessionSearchResult.Session.SessionSettings.Get(FName("Players"), CurrentSessionSettings.Players);
-
-			UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssHUD::AddSessionSearchResultsToScrollBox Adding session with MapName: %s, GameMode: %s, Players: %s"), *CurrentSessionSettings.MapName, *CurrentSessionSettings.GameMode, *CurrentSessionSettings.Players);
-
-			if (!SessionDataWidgetClass->IsValidLowLevel())
-			{
-				UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssHUD::AddSessionSearchResultsToScrollBox SessionDataWidgetClass is not valid. Please open WBP_HUD_Mss go to 'class defaults' and initialize SessionDataWidgetClass to WBP_SessionData_Mss"));
-				return;
-			}
-			
-			const TObjectPtr<UMssSessionDataWidget> CreatedSessionDataWidget = CreateWidget<UMssSessionDataWidget>(GetWorld(), SessionDataWidgetClass);
-			CreatedSessionDataWidget->SetSessionInfo(CurrentSessionSearchResult, CurrentSessionSettings);
-			CreatedSessionDataWidget->SetMssHUDRef(this);
-
-			AddSessionDataWidget(CreatedSessionDataWidget);
-		}
-		return;
-	}
+	TSet<FString> NewSessionKeys;
 
 	bool bAnySessionExists = false;
 	
-	for (const FOnlineSessionSearchResult& CurrentSessionSearchResult : SessionSearchResults)
+	// --- FIRST PASS: Add new sessions + update existing ones
+	for (const FOnlineSessionSearchResult& Result : Results)
 	{
-		if (CurrentSessionSearchResult.Session.NumOpenPublicConnections <= 0)
-		{
+		if (Result.Session.NumOpenPublicConnections <= 0)
 			continue;
-		}
-		
+
 		FTempCustomSessionSettings CurrentSessionSettings;
-		CurrentSessionSearchResult.Session.SessionSettings.Get(FName("MapName"), CurrentSessionSettings.MapName);
-		CurrentSessionSearchResult.Session.SessionSettings.Get(FName("GameMode"), CurrentSessionSettings.GameMode);
-		CurrentSessionSearchResult.Session.SessionSettings.Get(FName("Players"), CurrentSessionSettings.Players);
+		Result.Session.SessionSettings.Get(SETTING_MAPNAME, CurrentSessionSettings.MapName);
+		Result.Session.SessionSettings.Get(SETTING_GAMEMODE, CurrentSessionSettings.GameMode);
+		Result.Session.SessionSettings.Get(SETTING_NUMPLAYERSREQUIRED, CurrentSessionSettings.Players);
 
-		UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssHUD::AddSessionSearchResultsToScrollBox Checking session with MapName: %s, GameMode: %s, Players: %s"), *CurrentSessionSettings.MapName, *CurrentSessionSettings.GameMode, *CurrentSessionSettings.Players);
+		// -------- FILTER CHECK --------
+		if (!bShowAllMapName  && CurrentSessionSettings.MapName  != FilterSessionSettings.MapName)     continue;
+		if (!bShowAllGameMode && CurrentSessionSettings.GameMode != FilterSessionSettings.GameMode)    continue;
+		if (!bShowAllPlayers  && CurrentSessionSettings.Players  != FilterSessionSettings.Players)     continue;
+		// -------- END FILTER CHECK ----
 
-		// If a particular map is selected, then check if this session has that map if false then continue to the next search result
-		if (!bShowAllMapName && CurrentSessionSettings.MapName != SessionSettingsToLookFor.MapName)
-			continue;
-		
-		// If a particular game mode is selected, then check if this session has that game mode if false then continue to the next search result
-		if (!bShowAllGameMode && CurrentSessionSettings.GameMode != SessionSettingsToLookFor.GameMode)
-			continue;
-		
-		// If a particular players count is selected, then check if this session has that players count if false then continue to the next search result
-		if (!bShowAllPlayers && CurrentSessionSettings.Players != SessionSettingsToLookFor.Players)
-			continue;
-		
-		UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssHUD::AddSessionSearchResultsToScrollBox Adding session with matching settings."));
+		const FString Key = Result.GetSessionIdStr();
+		NewSessionKeys.Add(Key);
 
-		if (!SessionDataWidgetClass->IsValidLowLevel())
+		// --- UPDATE EXISTING WIDGET ---
+		if (UMssSessionDataWidget** ExistingWidgetPtr = ActiveSessionWidgets.Find(Key))
 		{
-			UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssHUD::AddSessionSearchResultsToScrollBox SessionDataWidgetClass is not valid. Please open WBP_HUD_Mss go to 'class defaults' and initialize SessionDataWidgetClass to WBP_SessionData_Mss"));
+			(*ExistingWidgetPtr)->SetSessionInfo(Result, CurrentSessionSettings);
+			bAnySessionExists = true;
+			continue; 
+		}
+
+		if (!SessionDataWidgetClass)
+		{
+			UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("SessionDataWidgetClass is NULL!"));
 			return;
 		}
-			
-		const TObjectPtr<UMssSessionDataWidget> CreatedSessionDataWidget = CreateWidget<UMssSessionDataWidget>(GetWorld(), SessionDataWidgetClass);
-		CreatedSessionDataWidget->SetSessionInfo(CurrentSessionSearchResult, CurrentSessionSettings);
-		CreatedSessionDataWidget->SetMssHUDRef(this);
 
-		AddSessionDataWidget(CreatedSessionDataWidget);
+		// --- ADD A NEW WIDGET ---
+		UMssSessionDataWidget* NewWidget = CreateWidget<UMssSessionDataWidget>(GetWorld(), SessionDataWidgetClass);
+		NewWidget->SetSessionInfo(Result, CurrentSessionSettings);
+		NewWidget->SetMssHUDRef(this);
+
+		AddSessionDataWidget(NewWidget);
+
+		ActiveSessionWidgets.Add(Key, NewWidget);
 
 		bAnySessionExists = true;
-	}
-
-	// If no session exists, according to the user's filter, then show the no active sessions text
-	if (!bAnySessionExists)
+		
+		UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("Added NEW session widget: %s"), *Key);
+	}	
+	
+	for (FString CurrentKey : LastSessionKeys)
 	{
-		UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssHUD::AddSessionSearchResultsToScrollBox FoundSessionScrollBox->GetChildrenCount() == 0"));
+		if (NewSessionKeys.Contains(CurrentKey))
+			continue;
 
+		if (UMssSessionDataWidget* CurrentSessionDataWidget = *ActiveSessionWidgets.Find(CurrentKey))
+		{
+			CurrentSessionDataWidget->RemoveFromParent();
+		}
+	}
+	
+	LastSessionKeys = MoveTemp(NewSessionKeys);
+	
+	// If no session exists, according to the user's filter, then show the no active sessions text
+	if (bAnySessionExists)
+	{
+		SetFindSessionsThrobberVisibility(ESlateVisibility::Hidden);
+	}
+	else
+	{
 		SetFindSessionsThrobberVisibility(ESlateVisibility::Visible);
+	}
+	
+	if (bCanFindNewSessions)
+	{
+		FindGame(FilterSessionSettings);
 	}
 }
 
@@ -328,6 +310,11 @@ void UMssHUD::JoinTheGivenSession(FOnlineSessionSearchResult& InSessionToJoin)
 	if (!MssSubsystem)
 	{		
 		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("UMssHUD::JoinTheGivenSession MultiplayerSessionsSubsystem is INVALID"));
+		return;
+	}
+	
+	if (!InSessionToJoin.IsValid())
+	{
 		return;
 	}
 	

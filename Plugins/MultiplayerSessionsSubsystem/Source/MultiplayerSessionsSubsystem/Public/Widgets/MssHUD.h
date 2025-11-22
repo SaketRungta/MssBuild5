@@ -106,13 +106,7 @@ private:
 	 */
 	void JoinSessionViaSessionCode(const TArray<FOnlineSessionSearchResult>& SessionSearchResults);
 
-	/**
-	 * When user is finding sessions then this function is called to display all the active sessions
-	 * It also filters out session results and displays only relevant session that user wishes to join
-	 * 
-	 * @param SessionSearchResults 
-	 */
-	void AddSessionSearchResultsToScrollBox(const TArray<FOnlineSessionSearchResult>& SessionSearchResults);
+	void UpdateSessionsList(const TArray<FOnlineSessionSearchResult>& Results);
 	
 	/**
 	 * Filters and returns the entered session code so that the code does not exceed the max limit
@@ -132,6 +126,11 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Multiplayer Sessions Subsystem")
 	FString LobbyMapPath = FString("");
 
+protected:
+	UPROPERTY(BlueprintReadWrite, Category = "Multiplayer Sessions Subsystem")
+	bool bCanFindNewSessions = false;
+	
+private:
 	/** True when user has requested to join via session code */
 	bool bJoinSessionViaCode = false;
 
@@ -144,6 +143,12 @@ private:
 	/** Widget class to add to the session data scroll box */
 	UPROPERTY(EditDefaultsOnly, Category = "Multiplayer Sessions Subsystem")
 	TSubclassOf<UMssSessionDataWidget> SessionDataWidgetClass;
+	
+	UPROPERTY()
+	TMap<FString, UMssSessionDataWidget*> ActiveSessionWidgets;
+
+	// Cache last known list so we can diff quickly
+	TSet<FString> LastSessionKeys;
 	
 public:
 	/**
@@ -170,13 +175,6 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void AddSessionDataWidget(UMssSessionDataWidget* InSessionDataWidget);
 
-	/** Calls to clear the session data scroll box, as we want to show the fresh set of search data */
-	UFUNCTION(BlueprintImplementableEvent)
-	void ClearSessionDataScrollBox();
-
 	UFUNCTION(BlueprintImplementableEvent)
 	void SetFindSessionsThrobberVisibility(ESlateVisibility InSlateVisibility);
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void ClearSessionsScrollBox();
 };
