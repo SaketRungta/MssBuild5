@@ -11,6 +11,44 @@
 
 DEFINE_LOG_CATEGORY(MultiplayerSessionSubsystemLog);
 
+// ---------- Local Helper for On-Screen Debug ----------
+
+static void ShowSubsystemOnScreenMessage(const FString& Message, const FColor& Color)
+{
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(
+			-1,
+			3.f,
+			Color,
+			FString("[SUBSYSTEM] ") + Message
+		);
+	}
+}
+
+// ---------- Logging Macros (Log + On-Screen Colors) ----------
+
+#define SUBSYS_LOG(Format, ...) \
+	do { \
+		const FString Msg = FString::Printf(Format, ##__VA_ARGS__); \
+		UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("%s"), *Msg); \
+		ShowSubsystemOnScreenMessage(Msg, FColor::Green); \
+	} while (0)
+
+#define SUBSYS_WARNING(Format, ...) \
+	do { \
+		const FString Msg = FString::Printf(Format, ##__VA_ARGS__); \
+		UE_LOG(MultiplayerSessionSubsystemLog, Warning, TEXT("%s"), *Msg); \
+		ShowSubsystemOnScreenMessage(Msg, FColor::Yellow); \
+	} while (0)
+
+#define SUBSYS_ERROR(Format, ...) \
+	do { \
+		const FString Msg = FString::Printf(Format, ##__VA_ARGS__); \
+		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("%s"), *Msg); \
+		ShowSubsystemOnScreenMessage(Msg, FColor::Red); \
+	} while (0)
+
 UMssSubsystem::UMssSubsystem():
 	CreateSessionCompleteDelegate(FOnCreateSessionCompleteDelegate::CreateUObject(this, &ThisClass::OnCreateSessionCompleteCallback)),
 	FindSessionsCompleteDelegate(FOnFindSessionsCompleteDelegate::CreateUObject(this, &ThisClass::OnFindSessionsCompleteCallback)),
@@ -21,16 +59,16 @@ UMssSubsystem::UMssSubsystem():
 	const IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get();
 	if (!OnlineSubsystem)
 	{
-		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("UMssSubsystem::UMssSubsystem No Online Subsystem detected! Ensure a valid subsystem (e.g., Steam) is enabled in DefaultEngine.ini."));
+		SUBSYS_ERROR(TEXT("UMssSubsystem::UMssSubsystem No Online Subsystem detected! Ensure a valid subsystem is enabled."));
 		return;
 	}
 
 	SessionInterface = OnlineSubsystem->GetSessionInterface();
 	if (!SessionInterface.IsValid())
 	{
-		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("UMssSubsystem::UMssSubsystem Online Subsystem does not support sessions! Check subsystem configuration."));
+		SUBSYS_ERROR(TEXT("UMssSubsystem::UMssSubsystem Online Subsystem does not support sessions!"));
 	}
-	
+
 	FCoreDelegates::OnPreExit.AddUObject(this, &UMssSubsystem::HandleAppExit);
 }
 
@@ -38,19 +76,24 @@ void UMssSubsystem::Deinitialize()
 {
 	Super::Deinitialize();
 	
-	UE_LOG(MultiplayerSessionSubsystemLog, Warning, TEXT("UMssSubsystem::Deinitialize called"));
+	SUBSYS_WARNING(TEXT("UMssSubsystem::Deinitialize called"));
 
 	HandleAppExit();
 }
 
 void UMssSubsystem::HandleAppExit()
 {	
-	UE_LOG(MultiplayerSessionSubsystemLog, Warning, TEXT("UMssSubsystem::HandleAppExit - Application exiting, destroying session"));
+	SUBSYS_WARNING(TEXT("UMssSubsystem::HandleAppExit - Application exiting, destroying session"));
 
 	if (SessionInterface.IsValid() && SessionInterface->GetNamedSession(NAME_GameSession))
 	{
-		UE_LOG(MultiplayerSessionSubsystemLog, Warning, TEXT("UMssSubsystem::HandleAppExit Active session detected during shutdown. Calling DestroySession()..."));
+		SUBSYS_WARNING(TEXT("UMssSubsystem::HandleAppExit Active session detected during shutdown. Destroying..."));
 		DestroySession();
+	}
+	
+	if (bFindSessionsInPProgress)
+	{
+		CancelFindSessions();
 	}
 }
 
@@ -58,27 +101,20 @@ void UMssSubsystem::HandleAppExit()
 
 void UMssSubsystem::CreateSession(const FTempCustomSessionSettings& InCustomSessionSettings)
 {
-	UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssSubsystem::CreateSession Called"));
+	SUBSYS_LOG(TEXT("UMssSubsystem::CreateSession Called"));
 
 	if (!SessionInterface.IsValid())
 	{
-		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("UMssSubsystem::CreateSession SessionInterface is INVALID. Check Online Subsystem.")); 
-
+		SUBSYS_ERROR(TEXT("CreateSession SessionInterface is INVALID"));
 		MultiplayerSessionsOnCreateSessionComplete.Broadcast(false);
 		return;
 	}
 	
-	/**
-	 * If a session is already active and players requests to create a new session
-	 * Then destroy the old session first and then call to create a new session
-	 */
 	if (SessionInterface->GetNamedSession(NAME_GameSession))
 	{		
-		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("UMssSubsystem::CreateSession NAME_GameSession already exists, destroying it before creating a new one"));
+		SUBSYS_ERROR(TEXT("NAME_GameSession already exists, destroying before creating a new one"));
 		
 		bCreateSessionOnDestroy = true;
-
-		/** Store the session creation data to use later when creating a new session after destroying the current session */
 		SessionSettingsForTheSessionToCreateAfterDestruction = InCustomSessionSettings;
 		
 		DestroySession();
@@ -87,13 +123,9 @@ void UMssSubsystem::CreateSession(const FTempCustomSessionSettings& InCustomSess
 
 	CreateSessionCompleteDelegateHandle = SessionInterface->AddOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegate);
 
-#pragma region Session Settings
-	
 	int32 NumPublicConnections = 2;
-	if (InCustomSessionSettings.Players == "2v2")
-		NumPublicConnections = 4;
-	else if (InCustomSessionSettings.Players == "4v4")
-		NumPublicConnections = 8;
+	if (InCustomSessionSettings.Players == "2v2") NumPublicConnections = 4;
+	else if (InCustomSessionSettings.Players == "4v4") NumPublicConnections = 8;
 	
 	const TSharedPtr<FOnlineSessionSettings> OnlineSessionSettings = MakeShareable(new FOnlineSessionSettings());
 	OnlineSessionSettings->bIsLANMatch = false;
@@ -109,11 +141,9 @@ void UMssSubsystem::CreateSession(const FTempCustomSessionSettings& InCustomSess
 	OnlineSessionSettings->Set(SETTING_NUMPLAYERSREQUIRED, InCustomSessionSettings.Players, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	OnlineSessionSettings->Set(SETTING_SESSIONKEY, GenerateSessionUniqueCode(), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 
-#pragma endregion Session Settings
-	
 	if (!SessionInterface->CreateSession(*GetWorld()->GetFirstLocalPlayerFromController()->GetPreferredUniqueNetId(), NAME_GameSession, *OnlineSessionSettings))
 	{
-		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("UMssSubsystem::CreateSession Failed to execute create session"));
+		SUBSYS_ERROR(TEXT("CreateSession failed to execute create session"));
 
 		SessionInterface->ClearOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegateHandle);
 		MultiplayerSessionsOnCreateSessionComplete.Broadcast(false);
@@ -122,12 +152,11 @@ void UMssSubsystem::CreateSession(const FTempCustomSessionSettings& InCustomSess
 
 void UMssSubsystem::FindSessions()
 {
-	UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssSubsystem::FindSessions Called"));
+	SUBSYS_LOG(TEXT("UMssSubsystem::FindSessions Called"));
 	
 	if (!SessionInterface.IsValid())
 	{
-		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("UMssSubsystem::FindSessions SessionInterface is INVALID. Check Online Subsystem."));
-
+		SUBSYS_ERROR(TEXT("FindSessions SessionInterface is INVALID"));
 		MultiplayerSessionsOnFindSessionsComplete.Broadcast(TArray<FOnlineSessionSearchResult>(), false);
 		return;
 	}
@@ -143,13 +172,20 @@ void UMssSubsystem::FindSessions()
 	
 	LastCreatedSessionSearch = MakeShareable(new FOnlineSessionSearch());
 	LastCreatedSessionSearch->MaxSearchResults = 10000;
-	LastCreatedSessionSearch->bIsLanQuery = false;;
+	LastCreatedSessionSearch->bIsLanQuery = false;
 	LastCreatedSessionSearch->QuerySettings.Set(SETTING_FILTERSEED, SETTING_FILTERSEED_VALUE, EOnlineComparisonOp::Equals);
 	LastCreatedSessionSearch->QuerySettings.Set(SEARCH_LOBBIES, true, EOnlineComparisonOp::Equals);
 
+	if (!GetWorld() || GetWorld()->bIsTearingDown)
+	{
+		SUBSYS_WARNING(TEXT("FindSessions aborted – world is tearing down"));
+		MultiplayerSessionsOnFindSessionsComplete.Broadcast(TArray<FOnlineSessionSearchResult>(), false);
+		return;
+	}
+
 	if (!SessionInterface->FindSessions(*GetWorld()->GetFirstLocalPlayerFromController()->GetPreferredUniqueNetId(), LastCreatedSessionSearch.ToSharedRef()))
 	{
-		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("UMssSubsystem::FindSessions failed to execute find sessions"));
+		SUBSYS_ERROR(TEXT("FindSessions failed to execute find sessions"));
 		
 		SessionInterface->ClearOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegateHandle);
 		bFindSessionsInPProgress = false;
@@ -159,42 +195,38 @@ void UMssSubsystem::FindSessions()
 
 void UMssSubsystem::CancelFindSessions()
 {
-	UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssSubsystem::CancelFindSessions Called"));
+	SUBSYS_LOG(TEXT("UMssSubsystem::CancelFindSessions Called"));
 
 	if (!SessionInterface.IsValid())
 	{
-		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("UMssSubsystem::CancelFindSessions SessionInterface is INVALID. Check Online Subsystem."));
+		SUBSYS_ERROR(TEXT("CancelFindSessions SessionInterface is INVALID"));
 		return;
 	}
 
 	bFindSessionsInPProgress = false;
 	
-	UE_LOG(MultiplayerSessionSubsystemLog, Warning, TEXT("UMssSubsystem::CancelFindSessions - Aborting search."));
+	SUBSYS_WARNING(TEXT("CancelFindSessions - Aborting search."));
 
-	// Clear delegate
 	SessionInterface->ClearOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegateHandle);
-
-	// Broadcast an empty result so UI knows search ended
 	MultiplayerSessionsOnFindSessionsComplete.Broadcast(TArray<FOnlineSessionSearchResult>(), false);
 }
 
 void UMssSubsystem::JoinSessions(FOnlineSessionSearchResult& InSessionToJoin)
 {
-	UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssSubsystem::JoinSessions Called"));
+	SUBSYS_LOG(TEXT("UMssSubsystem::JoinSessions Called"));
 	
 	if (!SessionInterface.IsValid())
 	{
-		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("UMssSubsystem::JoinSessions SessionInterface is INVALID. Check Online Subsystem."));
-
+		SUBSYS_ERROR(TEXT("JoinSessions SessionInterface is INVALID"));
 		MultiplayerSessionsOnJoinSessionsComplete.Broadcast(EOnJoinSessionCompleteResult::UnknownError);
 		return;
 	}
 	
-	if (IsSessionInState(EOnlineSessionState::Creating) || 
-		IsSessionInState(EOnlineSessionState::Starting) || 
+	if (IsSessionInState(EOnlineSessionState::Creating) ||
+		IsSessionInState(EOnlineSessionState::Starting) ||
 		IsSessionInState(EOnlineSessionState::Ending))
 	{
-		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("JoinSession blocked: session busy"));
+		SUBSYS_ERROR(TEXT("JoinSession blocked: session busy"));
 		MultiplayerSessionsOnJoinSessionsComplete.Broadcast(EOnJoinSessionCompleteResult::UnknownError);
 		return;
 	}
@@ -206,7 +238,7 @@ void UMssSubsystem::JoinSessions(FOnlineSessionSearchResult& InSessionToJoin)
 	
 	if (!SessionInterface->JoinSession(*GetWorld()->GetFirstLocalPlayerFromController()->GetPreferredUniqueNetId(), NAME_GameSession, InSessionToJoin))
 	{
-		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("UMssSubsystem::JoinSessions failed to execute join sessions"));
+		SUBSYS_ERROR(TEXT("JoinSessions failed to execute join sessions"));
 		
 		SessionInterface->ClearOnJoinSessionCompleteDelegate_Handle(JoinSessionCompleteDelegateHandle);
 		MultiplayerSessionsOnJoinSessionsComplete.Broadcast(EOnJoinSessionCompleteResult::UnknownError);
@@ -215,12 +247,11 @@ void UMssSubsystem::JoinSessions(FOnlineSessionSearchResult& InSessionToJoin)
 
 void UMssSubsystem::DestroySession()
 {
-	UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssSubsystem::DestroySession Called"));
+	SUBSYS_LOG(TEXT("UMssSubsystem::DestroySession Called"));
 	
 	if (!SessionInterface.IsValid())
 	{
-		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("UMssSubsystem::DestroySession SessionInterface is INVALID. Check Online Subsystem."));
-
+		SUBSYS_ERROR(TEXT("DestroySession SessionInterface is INVALID"));
 		MultiplayerSessionsOnDestroySessionComplete.Broadcast(false);
 		return;
 	}
@@ -229,7 +260,7 @@ void UMssSubsystem::DestroySession()
 		!IsSessionInState(EOnlineSessionState::InProgress) &&
 		!IsSessionInState(EOnlineSessionState::Ended))
 	{
-		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("DestroySession failed: no session to destroy"));
+		SUBSYS_ERROR(TEXT("DestroySession failed: no session to destroy"));
 		MultiplayerSessionsOnDestroySessionComplete.Broadcast(false);
 		return;
 	}
@@ -238,7 +269,7 @@ void UMssSubsystem::DestroySession()
 
 	if (!SessionInterface->DestroySession(NAME_GameSession))
 	{
-		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("UMssSubsystem::DestroySession failed to execute destroy sessions"));
+		SUBSYS_ERROR(TEXT("DestroySession failed to execute destroy sessions"));
 
 		SessionInterface->ClearOnDestroySessionCompleteDelegate_Handle(DestroySessionCompleteDelegateHandle);
 		MultiplayerSessionsOnDestroySessionComplete.Broadcast(false);
@@ -247,18 +278,18 @@ void UMssSubsystem::DestroySession()
 
 void UMssSubsystem::StartSession()
 {
-	UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssSubsystem::StartSession Called"));
+	SUBSYS_LOG(TEXT("UMssSubsystem::StartSession Called"));
 
 	if (!SessionInterface.IsValid())
 	{
-		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("UMssSubsystem::StartSession SessionInterface is INVALID"));
+		SUBSYS_ERROR(TEXT("StartSession SessionInterface is INVALID"));
 		MultiplayerSessionsOnStartSessionComplete.Broadcast(false);
 		return;
 	}
 	
 	if (!IsSessionInState(EOnlineSessionState::Pending))
 	{
-		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("StartSession called but session is NOT in Pending state"));
+		SUBSYS_ERROR(TEXT("StartSession called but session is NOT in Pending state"));
 		MultiplayerSessionsOnStartSessionComplete.Broadcast(false);
 		return;
 	}
@@ -267,7 +298,7 @@ void UMssSubsystem::StartSession()
 
 	if (!SessionInterface->StartSession(NAME_GameSession))
 	{
-		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("UMssSubsystem::StartSession Failed to execute StartSession"));
+		SUBSYS_ERROR(TEXT("StartSession failed to execute StartSession"));
 
 		SessionInterface->ClearOnStartSessionCompleteDelegate_Handle(StartSessionCompleteDelegateHandle);
 		MultiplayerSessionsOnStartSessionComplete.Broadcast(false);
@@ -278,11 +309,10 @@ void UMssSubsystem::StartSession()
 
 FString UMssSubsystem::GenerateSessionUniqueCode() const
 {
-	/** Sums up the time when session creation is requested */
 	const FDateTime CurrentTime = FDateTime::Now();
 	const FString SumOfCurrentTime = FString::Printf(TEXT("%d%d%03d"), CurrentTime.GetMinute(), CurrentTime.GetSecond(), CurrentTime.GetMillisecond());
 
-	UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssSubsystem::GenerateSessionUniqueCode unique code for the currently created session '%s'"), *SumOfCurrentTime);
+	SUBSYS_LOG(TEXT("GenerateSessionUniqueCode generated code '%s'"), *SumOfCurrentTime);
 
 	return SumOfCurrentTime;
 }
@@ -291,7 +321,7 @@ FString UMssSubsystem::GenerateSessionUniqueCode() const
 	
 void UMssSubsystem::OnCreateSessionCompleteCallback(FName SessionName, bool bWasSuccessful)
 {
-	UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssSubsystem::OnCreateSessionComplete created a session bWasSuccessful::%s"), bWasSuccessful ? TEXT("success") : TEXT("failed"));
+	SUBSYS_LOG(TEXT("OnCreateSessionComplete created session: %s"), bWasSuccessful ? TEXT("success") : TEXT("failed"));
 
 	if (SessionInterface)
 		SessionInterface->ClearOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegateHandle); 
@@ -300,7 +330,7 @@ void UMssSubsystem::OnCreateSessionCompleteCallback(FName SessionName, bool bWas
 	{
 		FString SessionCode;
 		Session->SessionSettings.Get(SETTING_SESSIONKEY, SessionCode);
-		GEngine->AddOnScreenDebugMessage(-1, 6000, FColor::Green, *SessionCode);
+		ShowSubsystemOnScreenMessage(SessionCode, FColor::Green);
 	}
 	
 	MultiplayerSessionsOnCreateSessionComplete.Broadcast(bWasSuccessful);	
@@ -308,7 +338,7 @@ void UMssSubsystem::OnCreateSessionCompleteCallback(FName SessionName, bool bWas
 
 void UMssSubsystem::OnFindSessionsCompleteCallback(bool bWasSuccessful)
 {
-	UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssSubsystem::OnFindSessionsCompleteCallback Completed finding sessions bWasSuccessful::%s"), bWasSuccessful ? TEXT("success") : TEXT("failed"));
+	SUBSYS_LOG(TEXT("OnFindSessionsCompleteCallback Completed. Success: %s"), bWasSuccessful ? TEXT("true") : TEXT("false"));
 
 	bFindSessionsInPProgress = false;
 	
@@ -317,8 +347,7 @@ void UMssSubsystem::OnFindSessionsCompleteCallback(bool bWasSuccessful)
 
 	if (!LastCreatedSessionSearch.IsValid() || LastCreatedSessionSearch->SearchResults.IsEmpty())
 	{
-		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("UMssSubsystem::OnFindSessionsCompleteCallback search result array is empty 0 active sessions found"));
-
+		SUBSYS_ERROR(TEXT("OnFindSessionsCompleteCallback no sessions found"));
 		MultiplayerSessionsOnFindSessionsComplete.Broadcast(TArray<FOnlineSessionSearchResult>(), bWasSuccessful);
 		return;
 	}
@@ -328,7 +357,7 @@ void UMssSubsystem::OnFindSessionsCompleteCallback(bool bWasSuccessful)
 
 void UMssSubsystem::OnJoinSessionCompleteCallback(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
 {
-	UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssSubsystem::OnJoinSessionComplete Completed joining session"));
+	SUBSYS_LOG(TEXT("OnJoinSessionComplete Completed"));
 
 	if (SessionInterface)
 		SessionInterface->ClearOnJoinSessionCompleteDelegate_Handle(JoinSessionCompleteDelegateHandle);
@@ -338,7 +367,7 @@ void UMssSubsystem::OnJoinSessionCompleteCallback(FName SessionName, EOnJoinSess
 
 void UMssSubsystem::OnDestroySessionCompleteCallback(FName SessionName, bool bWasSuccessful)
 {
-	UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssSubsystem::OnJoinSessionComplete Completed destroying session bWasSuccessful::%s"), bWasSuccessful ? TEXT("success") : TEXT("failed"));
+	SUBSYS_LOG(TEXT("OnDestroySessionComplete Completed. Success: %s"), bWasSuccessful ? TEXT("success") : TEXT("failed"));
 
 	if (SessionInterface.IsValid())
 		SessionInterface->ClearOnDestroySessionCompleteDelegate_Handle(DestroySessionCompleteDelegateHandle);
@@ -354,7 +383,7 @@ void UMssSubsystem::OnDestroySessionCompleteCallback(FName SessionName, bool bWa
 
 void UMssSubsystem::OnStartSessionCompleteCallback(FName SessionName, bool bWasSuccessful)
 {
-	UE_LOG(MultiplayerSessionSubsystemLog, Log, TEXT("UMssSubsystem::OnStartSessionCompleteCallback SessionName: %s | Success: %s"),
+	SUBSYS_LOG(TEXT("OnStartSessionCompleteCallback SessionName: %s | Success: %s"),
 		*SessionName.ToString(),
 		bWasSuccessful ? TEXT("true") : TEXT("false"));
 
@@ -365,11 +394,9 @@ void UMssSubsystem::OnStartSessionCompleteCallback(FName SessionName, bool bWasS
 
 	if (!bWasSuccessful)
 	{
-		UE_LOG(MultiplayerSessionSubsystemLog, Error, TEXT("UMssSubsystem::OnStartSessionCompleteCallback StartSession failed."));
+		SUBSYS_ERROR(TEXT("OnStartSessionCompleteCallback StartSession FAILED"));
 		return;
 	}
-
-    // optional: additional logic when StartSession succeeds
 }
 
 #pragma endregion Session Operations On Completion Delegates Callbacks

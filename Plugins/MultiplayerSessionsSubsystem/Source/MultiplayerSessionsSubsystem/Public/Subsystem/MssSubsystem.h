@@ -77,9 +77,9 @@ public:
 	/** Finds sessions for the client to join to */
 	void FindSessions();
 
-private:
 	void CancelFindSessions();
 	
+private:
 	bool bFindSessionsInPProgress = false;
 	
 public:

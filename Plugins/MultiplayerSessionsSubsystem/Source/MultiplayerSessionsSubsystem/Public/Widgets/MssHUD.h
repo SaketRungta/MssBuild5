@@ -126,11 +126,14 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Multiplayer Sessions Subsystem")
 	FString LobbyMapPath = FString("");
 
-protected:
-	UPROPERTY(BlueprintReadWrite, Category = "Multiplayer Sessions Subsystem")
+	UFUNCTION(BlueprintCallable)
+	void StartFindingSessions();
+	
+	UFUNCTION(BlueprintCallable)
+	void StopFindingSessions();
+	
 	bool bCanFindNewSessions = false;
 	
-private:
 	/** True when user has requested to join via session code */
 	bool bJoinSessionViaCode = false;
 

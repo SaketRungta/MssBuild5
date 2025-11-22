@@ -9,10 +9,7 @@
   <component name="ChangeListManager">
     <list default="true" id="70e591f2-34bd-42b5-9d17-09a3fb839e54" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MssBuild5.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MssBuild5.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HUD_Mss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HUD_Mss.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HostMenu_Mss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_HostMenu_Mss.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_SessionResultsWidget_Mss.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Content/Blueprints/Widgets/WBP_SessionResultsWidget_Mss.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Subsystem/MssSubsystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Subsystem/MssSubsystem.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Widgets/MssHUD.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Private/Widgets/MssHUD.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Public/Subsystem/MssSubsystem.h" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/MultiplayerSessionsSubsystem/Source/MultiplayerSessionsSubsystem/Public/Subsystem/MssSubsystem.h" afterDir="false" />
@@ -163,6 +160,7 @@
       <workItem from="1763585724283" duration="120000" />
       <workItem from="1763720939228" duration="7181000" />
       <workItem from="1763811684557" duration="7503000" />
+      <workItem from="1763819356713" duration="3767000" />
     </task>
     <servers />
   </component>
