@@ -80,7 +80,7 @@ public:
 	void CancelFindSessions();
 	
 private:
-	bool bFindSessionsInPProgress = false;
+	bool bFindSessionsInProgress = false;
 	
 public:
 	/**

@@ -80,13 +80,8 @@ private:
 	UFUNCTION(BlueprintCallable, Category = "MssHUD")
 	void HostGame(const FTempCustomSessionSettings& InSessionSettings);
 	
-	/**
-	 * Called to search a session with the given session settings
-	 * 
-	 * @param InSessionSettings settings to find the session with
-	 */
-	UFUNCTION(BlueprintCallable, Category = "MssHUD")
-	void FindGame(const FTempCustomSessionSettings& InSessionSettings);
+	/** Called to search a session with the given session settings */
+	void FindGame() const;
 
 	/**
 	 * Called when user enters any session code he wishes to join
@@ -140,9 +135,6 @@ private:
 	/** The session code that user wishes to join */
 	FString SessionCodeToJoin = "";
 
-	/** Session settings the user wishes to filter from */
-	FTempCustomSessionSettings FilterSessionSettings;
-
 	/** Widget class to add to the session data scroll box */
 	UPROPERTY(EditDefaultsOnly, Category = "Multiplayer Sessions Subsystem")
 	TSubclassOf<UMssSessionDataWidget> SessionDataWidgetClass;
@@ -180,4 +172,10 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void SetFindSessionsThrobberVisibility(ESlateVisibility InSlateVisibility);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	FTempCustomSessionSettings GetCurrentSessionsFilter();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ClearSessionsScrollBox();
 };

@@ -91,7 +91,7 @@ void UMssSubsystem::HandleAppExit()
 		DestroySession();
 	}
 	
-	if (bFindSessionsInPProgress)
+	if (bFindSessionsInProgress)
 	{
 		CancelFindSessions();
 	}
@@ -161,12 +161,12 @@ void UMssSubsystem::FindSessions()
 		return;
 	}
 	
-	if (bFindSessionsInPProgress)
+	if (bFindSessionsInProgress)
 	{
 		CancelFindSessions();
 	}
 	
-	bFindSessionsInPProgress = true;
+	bFindSessionsInProgress = true;
 	
 	FindSessionsCompleteDelegateHandle = SessionInterface->AddOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegate);
 	
@@ -188,7 +188,7 @@ void UMssSubsystem::FindSessions()
 		SUBSYS_ERROR(TEXT("FindSessions failed to execute find sessions"));
 		
 		SessionInterface->ClearOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegateHandle);
-		bFindSessionsInPProgress = false;
+		bFindSessionsInProgress = false;
 		MultiplayerSessionsOnFindSessionsComplete.Broadcast(TArray<FOnlineSessionSearchResult>(), false);
 	}
 }
@@ -203,12 +203,12 @@ void UMssSubsystem::CancelFindSessions()
 		return;
 	}
 
-	bFindSessionsInPProgress = false;
+	bFindSessionsInProgress = false;
 	
 	SUBSYS_WARNING(TEXT("CancelFindSessions - Aborting search."));
 
 	SessionInterface->ClearOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegateHandle);
-	MultiplayerSessionsOnFindSessionsComplete.Broadcast(TArray<FOnlineSessionSearchResult>(), false);
+	MultiplayerSessionsOnFindSessionsComplete.Broadcast(TArray<FOnlineSessionSearchResult>(), true);
 }
 
 void UMssSubsystem::JoinSessions(FOnlineSessionSearchResult& InSessionToJoin)
@@ -340,14 +340,21 @@ void UMssSubsystem::OnFindSessionsCompleteCallback(bool bWasSuccessful)
 {
 	SUBSYS_LOG(TEXT("OnFindSessionsCompleteCallback Completed. Success: %s"), bWasSuccessful ? TEXT("true") : TEXT("false"));
 
-	bFindSessionsInPProgress = false;
+	bFindSessionsInProgress = false;
 	
 	if (SessionInterface)
 		SessionInterface->ClearOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegateHandle);
 
-	if (!LastCreatedSessionSearch.IsValid() || LastCreatedSessionSearch->SearchResults.IsEmpty())
+	if (!LastCreatedSessionSearch.IsValid())
 	{
-		SUBSYS_ERROR(TEXT("OnFindSessionsCompleteCallback no sessions found"));
+		SUBSYS_ERROR(TEXT("LastCreatedSessionSearch Invalid"));
+		MultiplayerSessionsOnFindSessionsComplete.Broadcast(TArray<FOnlineSessionSearchResult>(), bWasSuccessful);
+		return;
+	}
+		
+	if (LastCreatedSessionSearch->SearchResults.IsEmpty())
+	{
+		SUBSYS_ERROR(TEXT("LastCreatedSessionSearch empty"));
 		MultiplayerSessionsOnFindSessionsComplete.Broadcast(TArray<FOnlineSessionSearchResult>(), bWasSuccessful);
 		return;
 	}

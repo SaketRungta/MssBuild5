@@ -87,6 +87,34 @@ bool UMssHUD::Initialize()
 	return true;
 }
 
+void UMssHUD::HostGame(const FTempCustomSessionSettings& InSessionSettings)
+{
+	ShowMessage(FString("Hosting Game"));
+
+	MssSubsystem->CreateSession(InSessionSettings);
+}
+
+void UMssHUD::FindGame() const
+{
+	MssSubsystem->FindSessions();
+}
+
+void UMssHUD::EnterCode(const FText& InSessionCode)
+{
+	bJoinSessionViaCode = true;
+	SessionCodeToJoin = InSessionCode.ToString();
+
+	if (SessionCodeToJoin.Len() < 7)
+	{
+		ShowMessage(FString("Session code must be 7 digits long"), true);		
+		return;
+	}
+	
+	ShowMessage(FString("Joining Game"));
+	
+	MssSubsystem->FindSessions();
+}
+
 #pragma region Multiplayer Sessions Callbacks
 
 void UMssHUD::OnSessionCreatedCallback(bool bWasSuccessful)
@@ -149,6 +177,7 @@ void UMssHUD::OnSessionJoinedCallback(EOnJoinSessionCompleteResult::Type Result)
 	{
 		HUD_ERROR(TEXT("UMssHUD::OnSessionJoinedCallback UnknownError"));
 		ShowMessage(FString("Unknown Error"), true);
+		bJoinSessionViaCode = false;
 		return;
 	}
 	
@@ -169,6 +198,7 @@ void UMssHUD::OnSessionJoinedCallback(EOnJoinSessionCompleteResult::Type Result)
 			{
 				HUD_ERROR(TEXT("UMssHUD::OnSessionJoinedCallback Failed to resolve connect string for session"));
 				ShowMessage(FString("Failed to Join Session"), true);
+				bJoinSessionViaCode = false;
 			}
 		}
 	}
@@ -187,36 +217,6 @@ void UMssHUD::OnSessionStartedCallback(bool bWasSuccessful)
 }
 
 #pragma endregion Multiplayer Sessions Callbacks
-
-void UMssHUD::HostGame(const FTempCustomSessionSettings& InSessionSettings)
-{
-	ShowMessage(FString("Hosting Game"));
-
-	MssSubsystem->CreateSession(InSessionSettings);
-}
-
-void UMssHUD::FindGame(const FTempCustomSessionSettings& InSessionSettings)
-{
-	FilterSessionSettings = InSessionSettings;
-
-	MssSubsystem->FindSessions();
-}
-
-void UMssHUD::EnterCode(const FText& InSessionCode)
-{
-	bJoinSessionViaCode = true;
-	SessionCodeToJoin = InSessionCode.ToString();
-
-	if (SessionCodeToJoin.Len() < 7)
-	{
-		ShowMessage(FString("Session code must be 7 digits long"), true);		
-		return;
-	}
-	
-	ShowMessage(FString("Joining Game"));
-	
-	MssSubsystem->FindSessions();
-}
 
 void UMssHUD::JoinSessionViaSessionCode(const TArray<FOnlineSessionSearchResult>& SessionSearchResults)
 {
@@ -246,10 +246,15 @@ void UMssHUD::UpdateSessionsList(const TArray<FOnlineSessionSearchResult>& Resul
 	HUD_LOG(TEXT("UMssHUD::UpdateSessionsList called"));
 
 	TSet<FString> NewSessionKeys;
-
 	bool bAnySessionExists = false;
-	
-	// --- FIRST PASS: Add new sessions + update existing ones
+
+	// Filter settings
+	const auto [MapName, GameMode, Players] = GetCurrentSessionsFilter();
+	const bool bShowAllMap = MapName == "Any";
+	const bool bShowAllGameMode = GameMode == "Any";
+	const bool bShowAllPlayers = Players == "Any";
+
+	// --- FIRST PASS: Add/update only filtered sessions ---
 	for (const FOnlineSessionSearchResult& Result : Results)
 	{
 		if (Result.Session.NumOpenPublicConnections <= 0)
@@ -260,6 +265,16 @@ void UMssHUD::UpdateSessionsList(const TArray<FOnlineSessionSearchResult>& Resul
 		Result.Session.SessionSettings.Get(SETTING_GAMEMODE, CurrentSessionSettings.GameMode);
 		Result.Session.SessionSettings.Get(SETTING_NUMPLAYERSREQUIRED, CurrentSessionSettings.Players);
 
+		if (!bShowAllMap && CurrentSessionSettings.MapName != MapName)
+			continue;
+		
+		if (!bShowAllGameMode && CurrentSessionSettings.GameMode != GameMode)
+			continue;
+		
+		if (!bShowAllPlayers && CurrentSessionSettings.Players != Players)
+			continue;
+		
+		// Session matches the filter → handle it
 		const FString Key = Result.GetSessionIdStr();
 		NewSessionKeys.Add(Key);
 
@@ -268,29 +283,28 @@ void UMssHUD::UpdateSessionsList(const TArray<FOnlineSessionSearchResult>& Resul
 		{
 			(*ExistingWidgetPtr)->SetSessionInfo(Result, CurrentSessionSettings);
 			bAnySessionExists = true;
-			continue; 
+			continue;
 		}
 
+		// --- ADD NEW WIDGET ---
 		if (!SessionDataWidgetClass)
 		{
 			HUD_ERROR(TEXT("SessionDataWidgetClass is NULL!"));
 			return;
 		}
 
-		// --- ADD A NEW WIDGET ---
 		UMssSessionDataWidget* NewWidget = CreateWidget<UMssSessionDataWidget>(GetWorld(), SessionDataWidgetClass);
 		NewWidget->SetSessionInfo(Result, CurrentSessionSettings);
 		NewWidget->SetMssHUDRef(this);
 
 		AddSessionDataWidget(NewWidget);
-
 		ActiveSessionWidgets.Add(Key, NewWidget);
 
 		bAnySessionExists = true;
-		
 		HUD_LOG(TEXT("Added NEW session widget: %s"), *Key);
-	}	
-	
+	}
+
+	// --- SECOND PASS: REMOVE widgets NOT in filtered set ---
 	for (const FString& CurrentKey : LastSessionKeys)
 	{
 		if (NewSessionKeys.Contains(CurrentKey))
@@ -298,16 +312,16 @@ void UMssHUD::UpdateSessionsList(const TArray<FOnlineSessionSearchResult>& Resul
 
 		if (UMssSessionDataWidget** WidgetPtr = ActiveSessionWidgets.Find(CurrentKey))
 		{
-			if (UMssSessionDataWidget* CurrentSessionDataWidget = *WidgetPtr)
-			{
-				CurrentSessionDataWidget->RemoveFromParent();
-			}
+			if (UMssSessionDataWidget* Widget = *WidgetPtr)
+				Widget->RemoveFromParent();
 		}
+
+		ActiveSessionWidgets.Remove(CurrentKey);
 	}
-	
+
 	LastSessionKeys = MoveTemp(NewSessionKeys);
-	
-	// If no session exists, according to the user's filter, then show the no active sessions text
+
+	// UI status messaging
 	if (bAnySessionExists)
 	{
 		SetFindSessionsThrobberVisibility(ESlateVisibility::Hidden);
@@ -316,21 +330,19 @@ void UMssHUD::UpdateSessionsList(const TArray<FOnlineSessionSearchResult>& Resul
 	{
 		SetFindSessionsThrobberVisibility(ESlateVisibility::Visible);
 	}
-	
+
+	// Auto-refresh logic
 	if (bCanFindNewSessions)
 	{
 		HUD_LOG(TEXT("bCanFindNewSessions true calling to find new game"));
-		
+
 		if (!IsValid(this) || !GetWorld() || GetWorld()->bIsTearingDown)
 		{
 			HUD_LOG(TEXT("UpdateSessionsList aborted – world is tearing down"));
 			return;
 		}
 
-		if (!GetWorld()->bIsTearingDown)
-		{
-			FindGame(FilterSessionSettings);
-		}
+		FindGame();
 	}
 }
 
@@ -387,6 +399,8 @@ void UMssHUD::StartFindingSessions()
 {
 	HUD_LOG(TEXT("UMssHUD::StartFindingSessions Called"));
 		
+	ClearSessionsScrollBox();
+	
 	bCanFindNewSessions = true;
 	
 	ActiveSessionWidgets.Empty();
@@ -395,12 +409,14 @@ void UMssHUD::StartFindingSessions()
 	
 	SetFindSessionsThrobberVisibility(ESlateVisibility::Visible);
 	
-	FindGame(FilterSessionSettings);
+	FindGame();
 }
 
 void UMssHUD::StopFindingSessions()
 {	
 	HUD_LOG(TEXT("UMssHUD::StopFindingSessions Called"));
+		
+	ClearSessionsScrollBox();
 		
 	bCanFindNewSessions = false;
 	
